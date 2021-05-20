@@ -4,6 +4,7 @@ import ImageGallery from "./components/ImageGallery";
 import fetchImages from "./services/gallery-api";
 import Button from "./components/Button";
 import Loader from "react-loader-spinner";
+import Modal from "./components/Modal";
 import "./styles.css";
 
 class App extends Component {
@@ -12,6 +13,9 @@ class App extends Component {
     searchQuery: "",
     isLoading: false,
     currentPage: 1,
+    showModal: false,
+    largeImage: "",
+    alt: "",
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -34,6 +38,20 @@ class App extends Component {
     });
   };
 
+  onOpenModal = (event) => {
+    this.setState((state) => ({
+      showModal: !state.showModal,
+      largeImage: event.target.dataset.large,
+      alt: event.target.dataset.alt,
+    }));
+  };
+
+  onCloseModal = () => {
+    this.setState((state) => ({
+      showModal: !state.showModal,
+    }));
+  };
+
   getImages = () => {
     const { searchQuery, currentPage } = this.state;
     const options = { searchQuery, currentPage };
@@ -53,7 +71,7 @@ class App extends Component {
     return (
       <div>
         <Searchbar onSubmit={this.onChangeInput} />
-        <ImageGallery images={this.state.images} />
+        <ImageGallery images={this.state.images} onClick={this.onOpenModal} />
         {this.state.isLoading && (
           <Loader
             className="Loader"
@@ -66,6 +84,11 @@ class App extends Component {
         )}
         {this.state.searchQuery && !this.state.isLoading && (
           <Button onClick={this.getImages} />
+        )}
+        {this.state.showModal && (
+          <Modal onClose={this.onCloseModal}>
+            <img src={this.state.largeImage} alt={this.state.alt} />
+          </Modal>
         )}
       </div>
     );
