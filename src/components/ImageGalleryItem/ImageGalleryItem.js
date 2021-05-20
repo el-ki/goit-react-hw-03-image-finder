@@ -1,6 +1,11 @@
-const ImagGalleryItem = () => {
+const ImagGalleryItem = ({ smallSize, alt, largeSize }) => (
   <li className="ImageGalleryItem">
-    <img src="" alt="" className="ImageGalleryItem-image" />
-  </li>;
-};
+    <img
+      src={smallSize}
+      alt={alt}
+      data-large={largeSize}
+      className="ImageGalleryItem-image"
+    />
+  </li>
+);
 export default ImagGalleryItem;
