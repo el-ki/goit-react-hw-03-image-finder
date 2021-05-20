@@ -2,22 +2,22 @@ import { Component } from "react";
 
 class Searchbar extends Component {
   state = {
-    query: "",
+    input: "",
   };
 
   handleInputChange = (event) => {
     const value = event.currentTarget.value;
-    this.setState({ query: value });
+    this.setState({ input: value });
   };
 
   handleOnSubmit = (event) => {
     event.preventDefault();
-    this.props.onSubmit(this.state.query);
+    this.props.onSubmit(this.state.input);
     this.reset();
   };
 
   reset = () => {
-    this.setState({ query: "" });
+    this.setState({ input: "" });
   };
 
   render() {

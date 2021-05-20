@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import Searchbar from "./components/Searchbar";
 import ImageGallery from "./components/ImageGallery";
 import fetchImages from "./services/gallery-api";
+import Button from "./components/Button";
+import Loader from "react-loader-spinner";
 import "./styles.css";
 
 class App extends Component {
@@ -16,11 +18,17 @@ class App extends Component {
     if (prevState.searchQuery !== this.state.searchQuery) {
       this.getImages();
     }
+    if (this.state.currentPage > 2) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   }
 
-  onChangeInput = (query) => {
+  onChangeInput = (input) => {
     this.setState({
-      searchQuery: query,
+      searchQuery: input,
       currentPage: 1,
       images: [],
     });
@@ -37,7 +45,8 @@ class App extends Component {
           currentPage: prevState.currentPage + 1,
         }));
       })
-      .catch((error) => `${error}`);
+      .catch((error) => `${error}`)
+      .finally(() => this.setState({ isLoading: false }));
   };
 
   render() {
@@ -45,6 +54,19 @@ class App extends Component {
       <div>
         <Searchbar onSubmit={this.onChangeInput} />
         <ImageGallery images={this.state.images} />
+        {this.state.isLoading && (
+          <Loader
+            className="Loader"
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={3000} //3 secs
+          />
+        )}
+        {this.state.searchQuery && !this.state.isLoading && (
+          <Button onClick={this.getImages} />
+        )}
       </div>
     );
   }
